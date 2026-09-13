@@ -1,3 +1,5 @@
 package main
 
-type config struct{}
+type config struct {
+	commands map[string]pokedexCommand
+}

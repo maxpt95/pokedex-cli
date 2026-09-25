@@ -18,6 +18,11 @@ func getCommands() map[string]pokedexCommand {
 			description: "Displays a help message",
 			callback:    commandHelp,
 		},
+		"map": {
+			name:        "map",
+			description: "Diplays the location areas of the pokemon worlds",
+			callback:    commandMap,
+		},
 		"exit": {
 			name:        "exit",
 			description: "Exit the Pokedex",
@@ -39,5 +44,9 @@ func commandHelp(cfg *config) error {
 	for _, command := range cfg.commands {
 		fmt.Printf("%s: %s\n", command.name, command.description)
 	}
+	return nil
+}
+
+func commandMap(cfg *config) error {
 	return nil
 }

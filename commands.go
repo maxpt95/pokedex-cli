@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-
-	"github.com/maxpt95/pokedexcli/internal/pokeapi"
 )
 
 type pokedexCommand struct {
@@ -55,7 +53,7 @@ func commandHelp(cfg *config) error {
 }
 
 func commandMap(cfg *config) error {
-	locationAreas, err := pokeapi.GetLocationAreas(cfg.Next)
+	locationAreas, err := cfg.client.ListLocationAreas(cfg.pokeApiNextUrl)
 	if err != nil {
 		return err
 	}
@@ -63,18 +61,19 @@ func commandMap(cfg *config) error {
 	for _, area := range locationAreas.Results {
 		fmt.Println(area.Name)
 	}
-	cfg.Next = locationAreas.Next
-	cfg.Previous = locationAreas.Previous
+	cfg.pokeApiNextUrl = locationAreas.Next
+	cfg.pokeApiPrevUrl = locationAreas.Previous
 
 	return nil
 
 }
 
 func commandMapb(cfg *config) error {
-	if cfg.Previous == "" {
+	if cfg.pokeApiPrevUrl == nil {
 		fmt.Println("you're on the first page")
+		return nil
 	}
-	locationAreas, err := pokeapi.GetLocationAreas(cfg.Previous)
+	locationAreas, err := cfg.client.ListLocationAreas(cfg.pokeApiPrevUrl)
 	if err != nil {
 		return err
 	}
@@ -82,8 +81,8 @@ func commandMapb(cfg *config) error {
 	for _, area := range locationAreas.Results {
 		fmt.Println(area.Name)
 	}
-	cfg.Next = locationAreas.Next
-	cfg.Previous = locationAreas.Previous
+	cfg.pokeApiNextUrl = locationAreas.Next
+	cfg.pokeApiPrevUrl = locationAreas.Previous
 
 	return nil
 

@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"pokedexcli/internal/pokeapi"
+
+	"github.com/maxpt95/pokedexcli/internal/pokeapi"
 )
 
 type pokedexCommand struct {

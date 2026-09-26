@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"pokedexcli/internal/pokeapi"
 )
 
 type pokedexCommand struct {
@@ -48,5 +49,17 @@ func commandHelp(cfg *config) error {
 }
 
 func commandMap(cfg *config) error {
+	locationAreas, err := pokeapi.GetLocationAreas(cfg.Next)
+	if err != nil {
+		return err
+	}
+
+	for _, area := range locationAreas.Results {
+		fmt.Println(area.Name)
+	}
+	cfg.Next = locationAreas.Next
+	cfg.Previous = locationAreas.Previous
+
 	return nil
+
 }

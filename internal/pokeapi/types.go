@@ -1,3 +1,6 @@
+// A pokeapi types implemented following the documentation of pokeapi endpoints
+// https://pokeapi.co/docs/v2#resource-listspagination-section
+
 package pokeapi
 
 type ShallowList struct {

@@ -21,8 +21,13 @@ func getCommands() map[string]pokedexCommand {
 		},
 		"map": {
 			name:        "map",
-			description: "Diplays the location areas of the pokemon worlds",
+			description: "Displays the next location areas of the pokemon worlds",
 			callback:    commandMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Displays the previous location areas of the pokemon worlds",
+			callback:    commandMapb,
 		},
 		"exit": {
 			name:        "exit",
@@ -50,6 +55,25 @@ func commandHelp(cfg *config) error {
 
 func commandMap(cfg *config) error {
 	locationAreas, err := pokeapi.GetLocationAreas(cfg.Next)
+	if err != nil {
+		return err
+	}
+
+	for _, area := range locationAreas.Results {
+		fmt.Println(area.Name)
+	}
+	cfg.Next = locationAreas.Next
+	cfg.Previous = locationAreas.Previous
+
+	return nil
+
+}
+
+func commandMapb(cfg *config) error {
+	if cfg.Previous == "" {
+		fmt.Println("you're on the first page")
+	}
+	locationAreas, err := pokeapi.GetLocationAreas(cfg.Previous)
 	if err != nil {
 		return err
 	}

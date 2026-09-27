@@ -17,12 +17,16 @@ func main() {
 		scanner.Scan()
 		input := scanner.Text()
 		cleanedInput := cleanInput(input)
+
+		fmt.Println(cleanedInput)
+
 		command, ok := cfg.commands[cleanedInput[0]]
 		if !ok {
 			fmt.Println("Uknown command")
 			continue
 		}
-		command.callback(&cfg)
+		params := cleanedInput[1:]
+		command.callback(&cfg, params)
 	}
 
 }

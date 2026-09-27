@@ -52,3 +52,18 @@ func (c *Client) ListLocationAreas(requestUrl *string) (ShallowList, error) {
 
 	return locationAreas, nil
 }
+
+func (c *Client) LocationArea(locationName string) (LocationArea, error) {
+	url := pokeApiUrl + "location-area/" + locationName
+	data, err := c.makeRequest(&url)
+	if err != nil {
+		return LocationArea{}, fmt.Errorf("error: failed to retrieve location area <%s> %w", locationName, err)
+	}
+
+	var locationArea LocationArea
+	if err := json.Unmarshal(data, &locationArea); err != nil {
+		return LocationArea{}, fmt.Errorf("error: failed to parse location area json %w", locationName, err)
+	}
+
+	return locationArea, nil
+}

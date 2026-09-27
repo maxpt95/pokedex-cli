@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 )
@@ -8,7 +9,7 @@ import (
 type pokedexCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, []string) error
 }
 
 func getCommands() map[string]pokedexCommand {
@@ -28,6 +29,11 @@ func getCommands() map[string]pokedexCommand {
 			description: "Displays the previous location areas of the pokemon worlds",
 			callback:    commandMapb,
 		},
+		"explore": {
+			name:        "explore",
+			description: "Explore a location for Pokemon",
+			callback:    commandExplore,
+		},
 		"exit": {
 			name:        "exit",
 			description: "Exit the Pokedex",
@@ -35,13 +41,13 @@ func getCommands() map[string]pokedexCommand {
 		},
 	}
 }
-func commandExit(cfg *config) error {
+func commandExit(cfg *config, params []string) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(cfg *config) error {
+func commandHelp(cfg *config, params []string) error {
 	fmt.Println()
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
@@ -52,7 +58,7 @@ func commandHelp(cfg *config) error {
 	return nil
 }
 
-func commandMap(cfg *config) error {
+func commandMap(cfg *config, params []string) error {
 	locationAreas, err := cfg.client.ListLocationAreas(cfg.pokeApiNextUrl)
 	if err != nil {
 		return err
@@ -68,7 +74,7 @@ func commandMap(cfg *config) error {
 
 }
 
-func commandMapb(cfg *config) error {
+func commandMapb(cfg *config, params []string) error {
 	if cfg.pokeApiPrevUrl == nil {
 		fmt.Println("you're on the first page")
 		return nil
@@ -86,4 +92,24 @@ func commandMapb(cfg *config) error {
 
 	return nil
 
+}
+
+func commandExplore(cfg *config, params []string) error {
+	if len(params) != 1 {
+		errorMsg := fmt.Sprintf("error: expecting 1 parameter and got %d", len(params))
+		fmt.Println(errorMsg)
+		return errors.New(errorMsg)
+	}
+
+	locationArea, err := cfg.client.LocationArea(params[0])
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	for _, encounter := range locationArea.PokemonEncounters {
+		fmt.Println(encounter.Pokemon.Name)
+	}
+
+	return nil
 }

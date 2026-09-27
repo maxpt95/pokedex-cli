@@ -6,14 +6,27 @@ import (
 	"io"
 )
 
-func (c *Client) reqShallowList(requestUrl *string) (ShallowList, error) {
+func (c *Client) makeRequest(requestUrl *string) ([]byte, error) {
+	if data, ok := c.cache.Get(*requestUrl); ok {
+		return data, nil
+	}
+
 	resp, err := c.httpClient.Get(*requestUrl)
 	if err != nil {
-		return ShallowList{}, err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	c.cache.Add(*requestUrl, data)
+	return data, nil
+}
+func (c *Client) reqShallowList(requestUrl *string) (ShallowList, error) {
+	data, err := c.makeRequest(requestUrl)
 	if err != nil {
 		return ShallowList{}, err
 	}

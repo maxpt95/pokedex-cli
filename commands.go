@@ -101,14 +101,17 @@ func commandExplore(cfg *config, params []string) error {
 		return errors.New(errorMsg)
 	}
 
+	fmt.Printf("Exploring %s \n", params[0])
+
 	locationArea, err := cfg.client.LocationArea(params[0])
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
 
+	fmt.Println("Found Pokemon:")
 	for _, encounter := range locationArea.PokemonEncounters {
-		fmt.Println(encounter.Pokemon.Name)
+		fmt.Printf("- %s\n", encounter.Pokemon.Name)
 	}
 
 	return nil

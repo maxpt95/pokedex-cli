@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	cfg := config{commands: getCommands(), client: pokeapi.NewClient(5 * time.Second)}
+	cfg := config{commands: getCommands(), client: pokeapi.NewClient(5*time.Second, 10*time.Second)}
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")

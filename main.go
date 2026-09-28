@@ -18,11 +18,16 @@ func main() {
 		input := scanner.Text()
 		cleanedInput := cleanInput(input)
 
+		if len(cleanedInput) < 1 {
+			continue
+		}
+
 		command, ok := cfg.commands[cleanedInput[0]]
 		if !ok {
 			fmt.Println("Uknown command")
 			continue
 		}
+
 		args := cleanedInput[1:]
 		command.callback(&cfg, args...)
 	}

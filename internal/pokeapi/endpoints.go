@@ -67,3 +67,18 @@ func (c *Client) LocationArea(locationName string) (LocationArea, error) {
 
 	return locationArea, nil
 }
+
+func (c *Client) Pokemon(name string) (Pokemon, error) {
+	url := pokeApiUrl + "pokemon" + name
+	data, err := c.makeRequest(&url)
+	if err != nil {
+		return Pokemon{}, fmt.Errorf("error: failed to retrieve pokemon %s details %w", name, err)
+	}
+
+	var pokemon Pokemon
+	if err := json.Unmarshal(data, &pokemon); err != nil {
+		return Pokemon{}, fmt.Errorf("error: failed to parse pokemon details")
+	}
+
+	return pokemon, nil
+}

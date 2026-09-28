@@ -33,6 +33,11 @@ func getCommands() map[string]pokedexCommand {
 			description: "Explore a location for Pokemon",
 			callback:    commandExplore,
 		},
+		"catch": {
+			name:        "catch",
+			description: "Throw a pokeball and try to catch a Pokemon!",
+			callback:    commandCatch,
+		},
 		"exit": {
 			name:        "exit",
 			description: "Exit the Pokedex",
@@ -95,14 +100,16 @@ func commandMapb(cfg *config, args ...string) error {
 
 func commandExplore(cfg *config, args ...string) error {
 	if len(args) != 1 {
-		return fmt.Errorf("error: expecting 1 parameter and got %d", len(args))
+		return fmt.Errorf("expecting 1 parameter <locationName> and got %d", len(args))
 	}
 
 	locationName := args[0]
-	fmt.Printf("Exploring %s \n", locationName)
 
 	locationArea, err := cfg.client.LocationArea(locationName)
-
+	if locationArea.ID == 0 {
+		return fmt.Errorf("location %s can't be found", locationArea)
+	}
+	fmt.Printf("Exploring %s \n", locationName)
 	if err != nil {
 		return err
 	}
@@ -110,6 +117,25 @@ func commandExplore(cfg *config, args ...string) error {
 	for _, encounter := range locationArea.PokemonEncounters {
 		fmt.Printf("- %s\n", encounter.Pokemon.Name)
 	}
+
+	return nil
+}
+
+func commandCatch(cfg *config, args ...string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("expecting 1 parameter <pokemonName> and got %d", len(args))
+	}
+	pokemonName := args[0]
+
+	pokemon, err := cfg.client.Pokemon(pokemonName)
+	if err != nil {
+		return err
+	}
+	if pokemon.ID == 0 {
+		return fmt.Errorf("pokemon %s doesn't exist", pokemonName)
+	}
+
+	fmt.Println("Throwing a Pokeball to %s...", pokemonName)
 
 	return nil
 }

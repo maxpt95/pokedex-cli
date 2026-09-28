@@ -47,7 +47,7 @@ func (c *Client) ListLocationAreas(requestUrl *string) (ShallowList, error) {
 
 	locationAreas, err := c.reqShallowList(&url)
 	if err != nil {
-		return ShallowList{}, fmt.Errorf("error: failed to retrieve locaction areas %w", err)
+		return ShallowList{}, fmt.Errorf("failed to retrieve locaction areas %w", err)
 	}
 
 	return locationAreas, nil
@@ -57,12 +57,12 @@ func (c *Client) LocationArea(locationName string) (LocationArea, error) {
 	url := pokeApiUrl + "location-area/" + locationName
 	data, err := c.makeRequest(&url)
 	if err != nil {
-		return LocationArea{}, fmt.Errorf("error: failed to retrieve location area <%s> %w", locationName, err)
+		return LocationArea{}, fmt.Errorf("failed to retrieve location area <%s> %w", locationName, err)
 	}
 
 	var locationArea LocationArea
 	if err := json.Unmarshal(data, &locationArea); err != nil {
-		return LocationArea{}, fmt.Errorf("error: failed to parse location area json %w", locationName, err)
+		return LocationArea{}, fmt.Errorf("failed to parse location area json %w", locationName, err)
 	}
 
 	return locationArea, nil
@@ -72,12 +72,12 @@ func (c *Client) Pokemon(name string) (Pokemon, error) {
 	url := pokeApiUrl + "pokemon" + name
 	data, err := c.makeRequest(&url)
 	if err != nil {
-		return Pokemon{}, fmt.Errorf("error: failed to retrieve pokemon %s details %w", name, err)
+		return Pokemon{}, fmt.Errorf("failed to retrieve pokemon %s details %w", name, err)
 	}
 
 	var pokemon Pokemon
 	if err := json.Unmarshal(data, &pokemon); err != nil {
-		return Pokemon{}, fmt.Errorf("error: failed to parse pokemon details")
+		return Pokemon{}, fmt.Errorf("failed to parse pokemon details")
 	}
 
 	return pokemon, nil

@@ -25,8 +25,8 @@ func main() {
 			fmt.Println("Uknown command")
 			continue
 		}
-		params := cleanedInput[1:]
-		command.callback(&cfg, params)
+		args := cleanedInput[1:]
+		command.callback(&cfg, args...)
 	}
 
 }

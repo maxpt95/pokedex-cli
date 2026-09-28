@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 )
@@ -96,9 +95,7 @@ func commandMapb(cfg *config, args ...string) error {
 
 func commandExplore(cfg *config, args ...string) error {
 	if len(args) != 1 {
-		errorMsg := fmt.Sprintf("error: expecting 1 parameter and got %d", len(args))
-		fmt.Println(errorMsg)
-		return errors.New(errorMsg)
+		return fmt.Errorf("error: expecting 1 parameter and got %d", len(args))
 	}
 
 	locationName := args[0]
@@ -107,7 +104,6 @@ func commandExplore(cfg *config, args ...string) error {
 	locationArea, err := cfg.client.LocationArea(locationName)
 
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	fmt.Println("Found Pokemon:")

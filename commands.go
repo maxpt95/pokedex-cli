@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand/v2"
 	"os"
 )
 
@@ -131,11 +132,20 @@ func commandCatch(cfg *config, args ...string) error {
 	if err != nil {
 		return err
 	}
+
 	if pokemon.ID == 0 {
 		return fmt.Errorf("pokemon %s doesn't exist", pokemonName)
 	}
 
 	fmt.Println("Throwing a Pokeball to %s...", pokemonName)
+	const threshold = 40.0 //magikarp base experience
+	isCought := rand.IntN(pokemon.BaseExperience) <= threshold
+	if isCought {
+		fmt.Printf("%s was cought!\n", pokemonName)
+		// add to pokedex
+		return nil
+	}
 
+	fmt.Printf("%s escaped!\n", pokemonName)
 	return nil
 }

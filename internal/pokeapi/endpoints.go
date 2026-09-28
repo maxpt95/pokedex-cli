@@ -69,7 +69,7 @@ func (c *Client) LocationArea(locationName string) (LocationArea, error) {
 }
 
 func (c *Client) Pokemon(name string) (Pokemon, error) {
-	url := pokeApiUrl + "pokemon" + name
+	url := pokeApiUrl + "pokemon/" + name
 	data, err := c.makeRequest(&url)
 	if err != nil {
 		return Pokemon{}, fmt.Errorf("failed to retrieve pokemon %s details %w", name, err)

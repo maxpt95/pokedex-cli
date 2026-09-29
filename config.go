@@ -7,4 +7,5 @@ type config struct {
 	client         pokeapi.Client
 	pokeApiNextUrl *string
 	pokeApiPrevUrl *string
+	pokedex        Pokedex
 }

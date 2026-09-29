@@ -137,12 +137,13 @@ func commandCatch(cfg *config, args ...string) error {
 		return fmt.Errorf("pokemon %s doesn't exist", pokemonName)
 	}
 
-	fmt.Println("Throwing a Pokeball to %s...", pokemonName)
+	fmt.Printf("Throwing a Pokeball at %s...\n", pokemonName)
 	const threshold = 40.0 //magikarp base experience
 	isCought := rand.IntN(pokemon.BaseExperience) <= threshold
 	if isCought {
 		fmt.Printf("%s was cought!\n", pokemonName)
-		// add to pokedex
+
+		cfg.pokedex.Add(pokemon)
 		return nil
 	}
 

@@ -19,6 +19,11 @@ func getCommands() map[string]pokedexCommand {
 			description: "Displays a help message",
 			callback:    commandHelp,
 		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "Show all of your caught Pokemon!",
+			callback:    commandPokedex,
+		},
 		"map": {
 			name:        "map",
 			description: "Displays the next location areas of the pokemon worlds",
@@ -178,6 +183,18 @@ func commandInspect(cfg *config, args ...string) error {
 	fmt.Println("Types:")
 	for _, pType := range pokemon.Types {
 		fmt.Println("  -", pType.Type.Name)
+	}
+	return nil
+}
+
+func commandPokedex(cfg *config, args ...string) error {
+
+	pokemonNames, err := cfg.pokedex.List()
+	if err != nil {
+		return err
+	}
+	for _, name := range pokemonNames {
+		fmt.Println("- ", name)
 	}
 	return nil
 }

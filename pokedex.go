@@ -1,7 +1,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"maps"
+	"slices"
 
 	"github.com/maxpt95/pokedexcli/internal/pokeapi"
 )
@@ -20,4 +23,11 @@ func (dex Pokedex) Get(pokemonName string) (pokeapi.Pokemon, error) {
 		return pokeapi.Pokemon{}, fmt.Errorf("you have not caught %s", pokemonName)
 	}
 	return pokemon, nil
+}
+
+func (dex Pokedex) List() ([]string, error) {
+	if len(dex.caughtPokemons) < 1 {
+		return nil, errors.New("your Pokedex is empty!")
+	}
+	return slices.Sorted(maps.Keys(dex.caughtPokemons)), nil
 }

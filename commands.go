@@ -39,6 +39,11 @@ func getCommands() map[string]pokedexCommand {
 			description: "Throw a pokeball and try to catch a Pokemon!",
 			callback:    commandCatch,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "Show a caught Pokemon details.",
+			callback:    commandInspect,
+		},
 		"exit": {
 			name:        "exit",
 			description: "Exit the Pokedex",
@@ -148,5 +153,31 @@ func commandCatch(cfg *config, args ...string) error {
 	}
 
 	fmt.Printf("%s escaped!\n", pokemonName)
+	return nil
+}
+
+func commandInspect(cfg *config, args ...string) error {
+
+	if len(args) != 1 {
+		return fmt.Errorf("expecting 1 parameter <pokemonName> and got %d", len(args))
+	}
+	pokemonName := args[0]
+
+	pokemon, err := cfg.pokedex.Get(pokemonName)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Name: %s\n", pokemonName)
+	fmt.Printf("Height: %d\n", pokemon.Height)
+	fmt.Printf("Weight: %d\n", pokemon.Weight)
+	fmt.Println("Stats:")
+	for _, stat := range pokemon.Stats {
+		fmt.Printf("    -%s: %d\n", stat.Stat.Name, stat.BaseStat)
+	}
+	fmt.Println("Types:")
+	for _, pType := range pokemon.Types {
+		fmt.Println("  -", pType.Type.Name)
+	}
 	return nil
 }
